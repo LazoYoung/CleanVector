@@ -115,10 +115,9 @@ class SegmentationDataset(Dataset):
 
     def _default_transform(self):
         return transforms.Compose([
-            transforms.Resize((256, 256)),
+            transforms.Resize((512, 512)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
+            transforms.Normalize(mean=[0., 0., 0.], std=[0., 0., 0.])
         ])
 
     def __len__(self):
@@ -131,7 +130,7 @@ class SegmentationDataset(Dataset):
         # Apply transformations
         image = self.transform(image)
         mask = transforms.Compose([
-            transforms.Resize((256, 256)),
+            transforms.Resize((512, 512)),  # todo: mask size must be identical to resized image
             transforms.ToTensor()
         ])(mask)
 
@@ -225,7 +224,7 @@ def predict(model, image_path, device, mean=None, std=None):
     model.eval()
     image = Image.open(image_path).convert('RGB')
     transform = transforms.Compose([
-        transforms.Resize((256, 256)),
+        transforms.Resize((256, 256)),  # todo: image shall be resized to match what's been used to train U-Net
         transforms.ToTensor(),
         transforms.Normalize(mean=mean, std=std)
     ])
