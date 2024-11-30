@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 
 import torch
-from PIL import Image
 from diffusers import DDIMScheduler, AutoPipelineForText2Image
 from diffusers.utils import is_xformers_available
 
-from backend.yaml import YAMLDeserializer
+from .parser import read_yaml
 
 
 @dataclass
@@ -20,15 +19,17 @@ class DiffusionConfig:
     xformers: bool
 
 
-def get_config():
-    return YAMLDeserializer().from_yaml_file("config/diffusion.yml", DiffusionConfig)
-
-
 class DiffusionModel:
+    cfg: any
+    pipeline: any
+
     def __init__(self):
-        self.cfg = get_config()
-        self.pipeline = None
+        self.read_config()
         self.compile()
+
+    def read_config(self):
+        self.cfg = read_yaml("config/diffusion.yml")
+        print("Diffusion config:", self.cfg)
 
     def compile(self):
         # Check for CUDA availability
@@ -55,23 +56,28 @@ class DiffusionModel:
 
         self.pipeline = pipe
 
-    def sample_images(self) -> list:
+    def sample_images(self, prompt=None) -> list:
         """
         Generate an image using a pre-trained diffusion model.
 
+        Args:
+            prompt: (optional) text to control image generation
+
         Returns:
-            list: List of generated PIL.Image
+            list: list of generated PIL.Image
         """
 
         if self.pipeline is None:
             self.compile()
 
+        prompt = self.cfg.prompt + prompt
         output = []
 
         for i in range(self.cfg.num_samples):
             with torch.inference_mode():
                 sample = self.pipeline(
-                    prompt=self.cfg.prompt,
+                    prompt=prompt,
+                    negative_prompt=self.cfg.negative_prompt,
                     width=self.cfg.width,
                     height=self.cfg.height,
                     num_images_per_prompt=1,

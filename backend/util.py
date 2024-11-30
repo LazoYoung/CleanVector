@@ -1,6 +1,5 @@
 import uuid
-from datetime import datetime
-from os import mkdir, makedirs
+from os import makedirs
 
 from PIL import Image
 
