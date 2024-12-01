@@ -9,6 +9,9 @@ def infer(args):
         return model.sample_images(prompt=args.prompt)
 
     authenticate(args.token)
+
+    print(f"Prompt: {args.prompt}")
+
     model = DiffusionModel()
     elapsed_time, samples = measure(sample_images, Time.SECOND)
 

@@ -57,7 +57,7 @@ class DiffusionModel:
         if self.pipeline is None:
             self.compile()
 
-        prompt = self.cfg.prompt + prompt
+        prompt = self.cfg.prompt + prompt if prompt else self.cfg.prompt
         output = []
 
         for i in range(self.cfg.num_samples):
