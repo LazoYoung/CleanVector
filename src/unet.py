@@ -166,35 +166,6 @@ def train_unet(model, train_loader, criterion, optimizer, device, epochs=10):
         print(f'Epoch [{epoch + 1}/{epochs}], Loss: {total_loss / len(train_loader):.4f}')
 
 
-# todo extract region of interest and discard background
-# find suitable dataset from https://sundong.tistory.com/7
-def main():
-    # Hyperparameters
-    BATCH_SIZE = 8
-    LEARNING_RATE = 1e-4
-    EPOCHS = 20
-
-    # Device configuration
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-    # Create dataset and dataloader
-    dataset = SegmentationDataset('path/to/images', 'path/to/masks')
-    train_loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
-
-    # Initialize model
-    model = UNet(in_channels=3, out_channels=1)
-
-    # Loss and optimizer
-    criterion = nn.BCELoss()  # Binary Cross Entropy for binary segmentation
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-
-    # Train the model
-    train_unet(model, train_loader, criterion, optimizer, device, EPOCHS)
-
-    # Save the model
-    torch.save(model.state_dict(), 'unet_segmentation_model.pth')
-
-
 def calculate_scale(dataset):
     """
     Calculate per-channel mean and standard deviation

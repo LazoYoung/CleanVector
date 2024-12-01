@@ -1,22 +1,12 @@
 from dataclasses import dataclass
+from os import makedirs
 
 import torch
 from diffusers import DDIMScheduler, AutoPipelineForText2Image
 from diffusers.utils import is_xformers_available
 
 from .parser import read_yaml
-
-
-@dataclass
-class DiffusionConfig:
-    model_id: str
-    prompt: str
-    width: int
-    height: int
-    num_samples: int
-    num_inference_step: int
-    guidance_scale: float
-    xformers: bool
+from .util import random_path
 
 
 class DiffusionModel:
@@ -32,14 +22,11 @@ class DiffusionModel:
         print("Diffusion config:", self.cfg)
 
     def compile(self):
-        # Check for CUDA availability
         device = "cuda" if torch.cuda.is_available() else "cpu"
         model_id = self.cfg.model_id
-
-        # Load scheduler
         scheduler = DDIMScheduler.from_pretrained(model_id, subfolder="scheduler")
 
-        # Load the pre-trained model
+        # Load pre-trained T2I model
         pipe = AutoPipelineForText2Image.from_pretrained(
             model_id,
             scheduler=scheduler,
@@ -85,5 +72,12 @@ class DiffusionModel:
                     guidance_scale=self.cfg.guidance_scale,
                 )
                 output.extend(sample.images)
+
+        if self.cfg.save:
+            save_dir = self.cfg.save_dir
+
+            for image in output:
+                makedirs(save_dir, exist_ok=True)
+                image.save(random_path("png", save_dir))
 
         return output

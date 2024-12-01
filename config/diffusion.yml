@@ -1,10 +1,20 @@
-#model_id: "stabilityai/stable-diffusion-3-medium-diffusers"
-model_id: "sd-legacy/stable-diffusion-v1-5"
+###################
+# Hyperparameters #
+###################
 prompt: "minimal flat 2d vector icon. lineal color. on a white background. trending on artstation"
 negative_prompt: "nsfw"
+#model_id: "stabilityai/stable-diffusion-3-medium-diffusers"
+model_id: "sd-legacy/stable-diffusion-v1-5"
 width: 512
 height: 512
 num_samples: 3
 num_inference_step: 50
 guidance_scale: 7.0
 xformers: true
+
+
+####################
+#   Model output   #
+####################
+save: true
+save_dir: "output/diffused"
