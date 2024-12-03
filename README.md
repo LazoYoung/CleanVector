@@ -15,5 +15,11 @@ pip install accelerate diffusers["torch"] transformers
 pip install xformers --index-url https://download.pytorch.org/whl/cu124
 ```
 
+## Update submodules
+```shell
+git submodule init
+git submodule update
+```
+
 ## Troubleshoot
 - [If system fails to load libcudnn_cnn_infer.so.8 (WSL only)](https://github.com/microsoft/WSL/issues/8587)

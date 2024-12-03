@@ -43,12 +43,13 @@ class DiffusionModel:
 
         self.pipeline = pipe
 
-    def sample_images(self, prompt=None) -> list:
+    def sample_images(self, prompt=None, num_sample=3) -> list:
         """
         Generate an image using a pre-trained diffusion model.
 
         Args:
             prompt: (optional) text to control image generation
+            num_sample: number of samples to generate
 
         Returns:
             list: list of generated PIL.Image
@@ -60,7 +61,7 @@ class DiffusionModel:
         prompt = self.cfg.prompt + prompt if prompt else self.cfg.prompt
         output = []
 
-        for i in range(self.cfg.num_samples):
+        for i in range(num_sample):
             with torch.inference_mode():
                 sample = self.pipeline(
                     prompt=prompt,

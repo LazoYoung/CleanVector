@@ -1,7 +1,9 @@
+import os
 import time
 import uuid
 from enum import Enum
 from getpass import getpass
+from PIL import Image
 
 from huggingface_hub import login
 
@@ -61,6 +63,27 @@ def random_path(ext: str, dir=None, prefix=None):
         filename = f"{dir}/{filename}"
 
     return filename
+
+
+def read_images(dir_path, max=999):
+    """Load batch of images from a directory."""
+    ext = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']
+    images = []
+    count = 0
+
+    for filename in os.listdir(dir_path):
+        fn = filename.lower()
+        if any(fn.endswith(ext) for ext in ext):
+            count += 1
+            if count > max:
+                break
+            try:
+                with Image.open(os.path.join(dir_path, filename)) as img:
+                    images.append(img.copy())
+            except Exception as e:
+                print(f"Error reading {filename}: {e}")
+
+    return images
 
 
 def measure(func, unit: Time) -> tuple[float, any]:

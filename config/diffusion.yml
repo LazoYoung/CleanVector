@@ -7,7 +7,6 @@ negative_prompt: "nsfw"
 model_id: "sd-legacy/stable-diffusion-v1-5"
 width: 512
 height: 512
-num_samples: 3
 num_inference_step: 50
 guidance_scale: 7.0
 xformers: true

@@ -6,7 +6,7 @@ from src.util import authenticate, measure, Time
 
 def infer(args):
     def sample_images():
-        return model.sample_images(prompt=args.prompt)
+        return model.sample_images(prompt=args.prompt, num_sample=args.num_sample)
 
     authenticate(args.token)
 
@@ -24,6 +24,8 @@ def main():
     )
     parser.add_argument("-p", "--prompt", type=str, default=None,
                         help="prompt used to control sampling.")
+    parser.add_argument("-n", "-num_sample", type=int, default=3,
+                        help="number of samples to generate")
     parser.add_argument("-t", "--token", type=str, default=None,
                         help="set huggingface access token.")
     parser.add_argument("--token_path", type=str, default=".token",
