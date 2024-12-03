@@ -24,7 +24,7 @@ def main():
     )
     parser.add_argument("-p", "--prompt", type=str, default=None,
                         help="prompt used to control sampling.")
-    parser.add_argument("-n", "-num_sample", type=int, default=3,
+    parser.add_argument("-n", "--num_sample", type=int, default=3,
                         help="number of samples to generate")
     parser.add_argument("-t", "--token", type=str, default=None,
                         help="set huggingface access token.")

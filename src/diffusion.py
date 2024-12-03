@@ -18,7 +18,7 @@ class DiffusionModel:
         self.compile()
 
     def read_config(self):
-        self.cfg = read_yaml("config/diffusion.yml")
+        self.cfg = read_yaml("resource/config/diffusion.yml")
         print("Diffusion config:", self.cfg)
 
     def compile(self):
