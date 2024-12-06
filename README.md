@@ -1,6 +1,6 @@
 # Setup project
 ## Prerequisite
-- Python 3.10
+- Python 3.9
 - [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit)
 - [NVIDIA cuDNN](https://developer.nvidia.com/cudnn)
 
@@ -11,7 +11,9 @@ Make sure the CUDA Toolkit 12.4 is installed before you proceed!
 
 ```shell
 conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
-pip install accelerate diffusers["torch"] transformers
+conda install -c conda-forge accelerate
+conda install -c conda-forge diffusers
+conda install conda-forge::transformers
 pip install xformers --index-url https://download.pytorch.org/whl/cu124
 ```
 

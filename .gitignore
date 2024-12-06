@@ -1,5 +1,6 @@
 .idea/
 log/
 output/
+diffvg/
 .requirements
 .token
