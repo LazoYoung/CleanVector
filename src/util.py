@@ -99,14 +99,13 @@ def measure(func, unit: Time) -> tuple[float, any]:
 
     sec = (end_time - start_time)
 
-    match unit:
-        case Time.NS:
-            elapsed_time = sec * 1000000
-        case Time.MS:
-            elapsed_time = sec * 1000
-        case Time.SECOND:
-            elapsed_time = sec
-        case _:
-            elapsed_time = 0
+    if unit == Time.NS:
+        elapsed_time = sec * 1000000
+    elif unit == Time.MS:
+        elapsed_time = sec * 1000
+    elif unit == Time.SECOND:
+        elapsed_time = sec
+    else:
+        elapsed_time = 0
 
     return elapsed_time, ret

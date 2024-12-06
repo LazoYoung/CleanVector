@@ -17,9 +17,11 @@ pip install xformers --index-url https://download.pytorch.org/whl/cu124
 
 ## Update submodules
 ```shell
-git submodule init
-git submodule update
+git submodule update --init --recursive
 ```
+
+Refer [this document](https://github.com/BachiLi/diffvg?tab=readme-ov-file#install) to install and build DiffVG.
+
 
 ## Troubleshoot
 - [If system fails to load libcudnn_cnn_infer.so.8 (WSL only)](https://github.com/microsoft/WSL/issues/8587)
