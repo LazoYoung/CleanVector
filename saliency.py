@@ -110,6 +110,10 @@ def main(args):
     else:
         images = read_images(args.file_path, args.num_sample)
 
+    if len(images) == 0:
+        print(f"No images found at {args.file_path}")
+        return
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     isnet = ISNet(device)
     saliency_maps = isnet.segment(images)

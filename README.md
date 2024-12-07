@@ -15,6 +15,7 @@ conda install -c conda-forge accelerate
 conda install -c conda-forge diffusers
 conda install conda-forge::transformers
 pip install xformers --index-url https://download.pytorch.org/whl/cu124
+pip install compel sentencepiece protobuf nltk
 ```
 
 ## Update submodules

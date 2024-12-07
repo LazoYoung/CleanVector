@@ -47,8 +47,9 @@ def authenticate(token: str = None):
             file.write(token)
         except Exception:
             print("Failed to save token to disk.")
-    except Exception:
+    except Exception as e:
         print("Failed to authenticate.")
+        raise e
 
 
 def random_path(ext: str, dir=None, prefix=None):

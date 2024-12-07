@@ -1,10 +1,9 @@
-###################
-# Hyperparameters #
-###################
-prompt: "minimal flat 2d vector icon. lineal color. on a white background. trending on artstation"
-negative_prompt: "nsfw"
+#####################
+#  Hyperparameters  #
+#####################
+model_id: "stabilityai/stable-diffusion-xl-base-1.0"
 #model_id: "stabilityai/stable-diffusion-3-medium-diffusers"
-model_id: "sd-legacy/stable-diffusion-v1-5"
+#model_id: "sd-legacy/stable-diffusion-v1-5"
 width: 512
 height: 512
 num_inference_step: 50
@@ -12,8 +11,23 @@ guidance_scale: 7.0
 xformers: true
 
 
-####################
-#   Model output   #
-####################
+######################
+# Prompt engineering #
+######################
+#prompt: "minimal flat 2d vector icon. lineal color. on a white background. trending on artstation. isolated on white background."
+negative_prompt: "repetitive, nsfw, ugly, distorted, deformed"
+styles:
+    cinematic: "cinematic film still of {prompt}, highly detailed, high budget hollywood movie, cinemascope, moody, epic, gorgeous, film grain"
+    anime: "anime artwork of {prompt}, anime style, key visual, vibrant, studio anime, highly detailed"
+    photographic: "cinematic photo of {prompt}, 35mm photograph, film, professional, 4k, highly detailed"
+    comic: "comic of {prompt}, graphic illustration, comic art, graphic novel art, vibrant, highly detailed"
+    icon: "{prompt}, minimal flat 2d vector icon. lineal color. trending on artstation. isolated on white background."
+    lineart: "line art drawing {prompt}, professional, sleek, modern, minimalist, graphic, line art, vector graphics"
+    pixelart: " pixel-art {prompt}, low-res, blocky, pixel art style, 8-bit graphics"
+
+
+######################
+#    Model output    #
+######################
 save: true
 save_dir: "output/diffused"

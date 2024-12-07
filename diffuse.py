@@ -5,14 +5,15 @@ from src.util import authenticate, measure, Time
 
 
 def infer(args):
-    def sample_images():
-        return model.sample_images(prompt=args.prompt, num_sample=args.num_sample)
-
     authenticate(args.token)
 
-    print(f"Prompt: {args.prompt}")
-
     model = DiffusionModel()
+    print("Available style:", list(model.cfg.styles.keys()))
+    style = input("Select one... ")
+
+    def sample_images():
+        return model.sample_images(prompt=args.prompt, num_sample=args.num_sample, style=style)
+
     elapsed_time, samples = measure(sample_images, Time.SECOND)
 
     print(f"Generated {len(samples)} samples in {elapsed_time:.1f} sec.")
