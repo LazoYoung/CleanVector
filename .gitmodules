@@ -1,3 +1,6 @@
 [submodule "diffvg"]
 	path = diffvg
 	url = https://github.com/BachiLi/diffvg.git
+[submodule "Real-ESRGAN"]
+	path = RealESRGAN
+	url = https://github.com/xinntao/Real-ESRGAN.git

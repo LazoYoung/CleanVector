@@ -12,7 +12,7 @@ from src.util import read_images
 save_dir = "models"
 
 
-class Saliency:
+class SaliencyFilter:
     def __init__(self, model, mean, std, mapper, device):
         self.model = model
         self.mean = mean
@@ -65,7 +65,7 @@ class Saliency:
         return image
 
 
-class ISNet(Saliency):
+class ISNet(SaliencyFilter):
     def __init__(self, device):
         def mapper(output):
             return output[0][0]
@@ -104,7 +104,7 @@ def filter_images(images, filters):
     return output
 
 
-def main(args):
+def test(args):
     if args.diffusion:
         images = DiffusionModel().sample_images(args.prompt, args.num_sample)
     else:
@@ -139,4 +139,4 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--map", action="store_true",
                         help="show saliency heatmap")
     args = parser.parse_args()
-    main(args)
+    test(args)

@@ -14,7 +14,6 @@ xformers: true
 ######################
 # Prompt engineering #
 ######################
-#prompt: "minimal flat 2d vector icon. lineal color. on a white background. trending on artstation. isolated on white background."
 negative_prompt: "repetitive, nsfw, ugly, distorted, deformed"
 styles:
     cinematic: "cinematic film still of {prompt}, highly detailed, high budget hollywood movie, cinemascope, moody, epic, gorgeous, film grain"

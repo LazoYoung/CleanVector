@@ -7,7 +7,7 @@ from diffusers.utils import is_xformers_available
 from compel import Compel, ReturnedEmbeddingsType
 
 from .parser import read_yaml
-from .token_score import AttentionScoreComputer
+from .sentence_attention import AttentionScoreComputer
 from .util import random_path
 
 

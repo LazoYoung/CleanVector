@@ -24,6 +24,7 @@ git submodule update --init --recursive
 ```
 
 Refer [this document](https://github.com/BachiLi/diffvg?tab=readme-ov-file#install) to install and build DiffVG.
+Refer [this document](https://github.com/xinntao/Real-ESRGAN?tab=readme-ov-file#-dependencies-and-installation) to install dependencies of Real-ESRGAN.
 
 
 ## Troubleshoot
