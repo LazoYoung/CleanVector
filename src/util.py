@@ -85,6 +85,7 @@ def read_images(dir_path, max=999) -> list[Image.Image]:
             try:
                 with Image.open(os.path.join(dir_path, filename)) as img:
                     img.load()
+                    img = img.convert("RGB")
                     images.append(img)
             except Exception as e:
                 print(f"Error reading {filename}: {e}")

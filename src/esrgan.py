@@ -6,7 +6,7 @@ from PIL.Image import Resampling
 from src.util import download_file, run_script_with_args
 
 
-def upscale(input_dir, output_dir, width=512, height=512):
+def upscale(input_dir, output_dir, scale_factor=3, width=512, height=512):
     dir = "../resource/model/esrgan"
     script_path = "../resource/model/esrgan/realesrgan-ncnn-vulkan"
 
@@ -39,7 +39,9 @@ def upscale(input_dir, output_dir, width=512, height=512):
             run_script_with_args(script_path, [
                 '-i', input_path,
                 '-o', output_path,
-                '-s', '3',
+                '-n', "realesrgan-x4plus",
+                # '-n', 'realesrnet-x4plus',
+                '-s', f"{scale_factor}",
             ])
             try:
                 with Image.open(output_path) as img:
