@@ -22,7 +22,7 @@ styles:
     comic: "comic of {prompt}, graphic illustration, comic art, graphic novel art, vibrant, highly detailed"
     icon: "{prompt}, minimal flat 2d vector icon. lineal color. trending on artstation. isolated on white background."
     lineart: "line art drawing {prompt}, professional, sleek, modern, minimalist, graphic, line art, vector graphics"
-    pixelart: " pixel-art {prompt}, low-res, blocky, pixel art style, 8-bit graphics"
+    pixelart: "pixel-art {prompt}, low-res, blocky, pixel art style, 8-bit graphics"
 
 
 ######################

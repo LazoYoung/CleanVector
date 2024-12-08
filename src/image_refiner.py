@@ -11,15 +11,15 @@ from src.util import read_images, random_path
 
 
 class ImageRefiner:
-    def __init__(self, prompt):
+    def __init__(self, prompt, output_dir):
         self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
         self.clip_proc = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         self.detr_model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
         self.detr_proc = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
         self.sentence_sim = SentenceSimilarity()
         self.prompt = prompt
-        self.crop_dir = "../output/cropped"
-        os.makedirs(self.crop_dir, exist_ok=True)
+        self.output_dir = output_dir
+        os.makedirs(self.output_dir, exist_ok=True)
 
     def compute_clip_scores(self, images: any) -> list:
         with torch.no_grad():
@@ -34,7 +34,7 @@ class ImageRefiner:
         probs = logits_per_image.squeeze().softmax(dim=0).tolist()
         return probs
 
-    def compute_detr_aabb(self, images: any, detr_threshold=0.9, prompt_threshold=0.6) -> list[dict]:
+    def compute_detr_aabb(self, images: any, detr_threshold=0.9, prompt_threshold=0.3) -> list[dict]:
         """
         Find the most relevant object in each image.
         @param images: List of images or a single image
@@ -82,12 +82,15 @@ class ImageRefiner:
                 })
                 # print(f"Detected {label} with confidence {score:.3f} at location {box}")
 
+            # todo - DETR fails to meet threshold if prompt is too expressive
+            # perhaps we could adjust threshold based on prompt length
             if max_similarity > prompt_threshold and relevant_label:
                 img_objects = filter(lambda _obj: _obj['label'] == relevant_label, img_objects)
                 obj = sorted(img_objects, key=lambda _obj: _obj['score'])[-1]
                 objects.append(obj)
                 print(f"Found {obj['label']} with confidence {obj['score']} and similarity {max_similarity} at location {obj['box']}")
             else:
+                print(f"No object found. Max similarity was {max_similarity} with label {relevant_label}")
                 objects.append(None)
 
         return objects
@@ -96,7 +99,9 @@ class ImageRefiner:
         return self.detr_model.config.id2label[label_emb.item()]
 
     @staticmethod
-    def visualize(images, clip_scores, detr_results):
+    def visualize(images, clip_scores, detr_results=None):
+        if detr_results is None:
+            detr_results = [None] * len(clip_scores)
         for idx, (score, obj) in enumerate(zip(clip_scores, detr_results)):
             image = images[idx]
             draw = ImageDraw.Draw(image)
@@ -115,15 +120,21 @@ class ImageRefiner:
             plt.imshow(image)
             plt.show()
 
-    def augment(self, images, detr_results, top_k=7):
+    def augment(self, images, detr_results=None, top_k=7):
         cropped = []
 
-        # crop images according to DETR AABB
-        for idx, obj in enumerate(detr_results):
-            if obj:
-                image = images[idx]
-                image = image.crop(obj['box'])
-                cropped.append(image)
+        if detr_results is None:
+            cropped = images
+        else:
+            # crop images according to DETR AABB
+            for idx, obj in enumerate(detr_results):
+                if obj:
+                    image = images[idx]
+                    image = image.crop(obj['box'])
+                    cropped.append(image)
+            if len(cropped) == 0:
+                print("No image were sufficient")
+                return
 
         # remove background
         images = cropped
@@ -131,10 +142,12 @@ class ImageRefiner:
         is_net = ISNet(device)
         saliency_maps = is_net.segment(images)
         images = filter_images(images, saliency_maps)
+        images = [Image.fromarray(image) for image in images]
 
         # compute semantic similarity
         scores = self.compute_clip_scores(images)
-        images = [(score, Image.fromarray(image)) for score, image in zip(scores, images)]
+        scores = scores if isinstance(scores, list) else [scores]
+        images = [(score, image) for score, image in zip(scores, images)]
         images = sorted(images, key=lambda x: x[0], reverse=True)[:top_k]
         images = [image for score, image in images]
 
@@ -142,15 +155,15 @@ class ImageRefiner:
             plt.imshow(image)
             plt.suptitle(f"CLIP score: {score:.3f}")
             plt.show()
-            image.save(random_path(ext="png", dir=self.crop_dir))
+            image.save(random_path(ext="png", dir=self.output_dir))
 
 
-def refine(images, prompt):
+def refine(images, prompt, output_dir, detect_objects=True, prompt_threshold=0.3):
     if len(images) == 0:
         raise ValueError("Image should not be empty.")
-    refiner = ImageRefiner(prompt)
+    refiner = ImageRefiner(prompt, output_dir)
     clip_scores = refiner.compute_clip_scores(images)
-    detr_results = refiner.compute_detr_aabb(images)
+    detr_results = refiner.compute_detr_aabb(images, prompt_threshold) if detect_objects else None
     # refiner.visualize(images, clip_scores, detr_results)
     refiner.augment(images, detr_results)
 
@@ -158,4 +171,4 @@ def refine(images, prompt):
 if __name__ == "__main__":
     dir = "../output/diffused"
     prompt = "stop sign"
-    refine(read_images(dir), prompt)
+    refine(read_images(dir), prompt, dir)
